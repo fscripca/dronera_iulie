@@ -1,0 +1,38 @@
+name: Full Deployment Chain
+
+on:
+  workflow_dispatch:
+
+jobs:
+  full-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Deploy smart contracts
+        run: npx hardhat deploy --network polygon_mumbai
+      - name: Apply DB schema
+        run: psql -h localhost -p 5432 -U postgres -d drn_db -f scripts/supabase_auto_report.sql
+      - name: Seed database
+        run: node scripts/seedDatabase.js
+      - name: Generate .env file
+        run: node scripts/generateEnv.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          ALCHEMY_MUMBAI_URL: ${{ secrets.ALCHEMY_MUMBAI_URL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      - name: Build frontend
+        run: npm run build
+      - name: Deploy frontend
+        run: npx netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
