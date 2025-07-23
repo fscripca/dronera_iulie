@@ -1,0 +1,44 @@
+/* Stripe Element Styles */
+.stripe-element-container {
+  padding: 16px;
+  background-color: #0d0d14;
+  border-radius: 8px;
+  min-height: 40px;
+}
+
+.stripe-element {
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* Override Stripe's default styles */
+.StripeElement {
+  width: 100% !important;
+  padding: 10px 0 !important;
+  background-color: transparent !important;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 0 0 1px rgba(0, 204, 255, 0.5) !important;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a !important;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: transparent !important;
+}
+
+/* Fix for canvas rendering issues */
+.__PrivateStripeElement iframe {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure the card element is visible */
+.__PrivateStripeElement {
+  min-height: 24px !important;
+  display: block !important;
+}
