@@ -1,9 +1,0 @@
-[
-  {
-    "inputs": [],
-    "name": "buyback",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
